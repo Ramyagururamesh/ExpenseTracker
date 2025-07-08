@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Expense Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #ffe6f0;
+      color: #333;
+      transition: all 0.3s ease;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      background-color: white;
+      padding: 30px;
+      margin: 40px auto;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      padding: 10px 0;
+    }
+
+    form {
+      margin-bottom: 30px;
+    }
+
+    input, select, button {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #e055a1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #fff;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    /* Dark Mode */
+    .dark-mode {
+      background-color: #121212;
+      color: #eee;
+    }
+
+    .dark-mode .container {
+      background-color: #1e1e1e;
+      color: #eee;
+    }
+
+    .dark-mode input,
+    .dark-mode select,
+    .dark-mode textarea {
+      background-color: #2c2c2c;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    .dark-mode table {
+      background-color: #2c2c2c;
+      color: #eee;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: inherit;
+    }
+
+    .toggle-btn:hover {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header with toggle -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h1>💸Expense Tracker</h1>
+      <button class="toggle-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">Switch Mode🌓</button>
+    </div>
+
+    <h2>📅 Total Expense on {{ today }}: ₹{{ total_today }}</h2>
+    <h2>📊 Total Expense (All-Time): ₹{{ total_all }}</h2>
+
+    <!-- Add Expense Form -->
+    <form method="POST" action="/add">
+      <h3>➕ Add Expense</h3>
+      <input type="number" name="amount" placeholder="Amount (₹)" required step="0.01" />
+
+      <select name="category" required>
+        <option value="">-- Select Category --</option>
+        <option value="Food">🍲 Food</option>
+        <option value="Rent">🏠 Rent</option>
+        <option value="Utilities">💡 Utilities</option>
+        <option value="Travel">🚗 Travel</option>
+        <option value="Shopping">🛍️ Shopping</option>
+        <option value="Entertainment">🎬 Entertainment</option>
+        <option value="Education">📚 Education</option>
+        <option value="Health">🏥 Health</option>
+        <option value="Donations">🤲 Donations</option>
+        <option value="Investment">💰 Investment</option>
+        <option value="Personal Care">🧖‍♀️ Personal Care</option>
+        <option value="Loan EMI">💳 Loan EMI</option>
+        <option value="Others">🔘 Others</option>
+      </select>
+
+      <input type="date" name="date" required />
+      <input type="text" name="note" placeholder="Note (optional)" />
+      <button type="submit">Add Expense</button>
+    </form>
+
+    <!-- View Total for a Day -->
+    <form method="POST" action="/total_by_date">
+      <h3>🔎 Check Total for a Specific Date</h3>
+      <input type="date" name="query_date" required />
+      <button type="submit">Check Total</button>
+    </form>
+
+    {% if total_on_date is defined %}
+      <h2>📅 Total on {{ query_date }}: ₹{{ total_on_date }}</h2>
+    {% endif %}
+
+    <!-- Expenses Table -->
+    <h2>📋 All Expenses</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Amount (₹)</th>
+          <th>Category</th>
+          <th>Date</th>
+          <th>Note</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for expense in expenses %}
+        <tr>
+          <td>{{ expense['amount'] }}</td>
+          <td>{{ expense['category'] }}</td>
+          <td>{{ expense['date'] }}</td>
+          <td>{{ expense['note'] }}</td>
+          <td>
+            <form method="POST" action="/delete/{{ expense['id'] }}">
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <!-- Download Excel button -->
+<div style="margin-top: 20px; text-align: right;">
+  <a href="/export_excel" style="text-decoration: none;">
+    <button>📥 Download as Excel (.xlsx)</button>
+  </a>
+</div>
+
+  </div>
+
+  <!-- JavaScript: Dark Mode Toggle -->
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+    }
+
+    window.onload = function () {
+      if (localStorage.getItem("darkMode") === "true") {
+        document.body.classList.add("dark-mode");
+      }
+    };
+  </script>
+</body>
+</html>
