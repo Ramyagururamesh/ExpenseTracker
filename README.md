@@ -28,15 +28,7 @@ This app helps users track daily expenses, view totals for specific days, and do
 
 ---
 
-## 📁 Project Structure
-ExpenseTracker/
-├── app.py
-├── requirements.txt
-├── Procfile
-├── README.md
-├── expenses.db
-├── templates/
-│ └── index.html
-├── static/
-│ └── styles.css
+## 🌍 Live Demo
+
+🔗 [Expense Tracker Live on Render](https://expensetracker-ft1q.onrender.com)
 
