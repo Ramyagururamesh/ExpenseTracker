@@ -11,7 +11,6 @@ This app helps users track daily expenses, view totals for specific days, and do
 - 📅 View total expense for today and specific dates
 - 📁 Download all expenses in Excel format
 - 🌗 Toggle between Light and Dark Mode
-- 🎨 Baby pink theme and centered layout
 - 🧾 Data stored in a local SQLite database
 
 ---
